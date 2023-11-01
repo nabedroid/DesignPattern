@@ -1,0 +1,59 @@
+﻿# Factory Method パターン
+オブジェクトを作成するためのインターフェースを定義するが、どのクラスをインスタンス化するについては、サブクラスに決定させる。
+Factory Methodにより、クラスはサブクラスにインスタンス化を委ねることが出来る。
+
+オブジェクトを作成する際に、一緒に何かしらの処理を行うような場合に使われる。
+
+```C#
+public abstract class AbstractFactory {
+  public Product CustomProduct() {
+    Product product = CreateProduct();
+    return Custom(product);
+  }
+
+  private Product Custom(Product product) {
+    // 製品をカスタムするような処理
+    return product;
+  }
+
+  public abstract Product CreateProduct();
+}
+
+public class FactoryA : AbstractFactory {
+  public override Product CreateProduct() {
+    return new ProductA();
+  }
+}
+
+public class FactoryB : AbstractFactory {
+  public override Product CreateProduct() {
+    return new ProductB();
+  }
+}
+```
+
+
+# Abstract Factory パターン
+具象クラスを指定せずに、一連の関連オブジェクトや依存オブジェクトを作成するためのインターフェースを提供する。
+
+一連のグループをもったクラスを生成する時に使う。
+
+```C#
+public abstract class AbstractFactory {
+  public Product GetProductA();
+  public Product GetProductB();
+  public Product GetProductC();
+}
+
+public class CompanyAFactory : AbstractFactory {
+  public override Product GetProductA() { return new CompanyA_ProductA(); }
+  public override Product GetProductB() { return new CompanyA_ProductB(); }
+  public override Product GetProductC() { return new CompanyA_ProductC(); }
+}
+
+public class CompanyBFactory : AbstractFactory {
+  public override Product GetProductA() { return new CompanyB_ProductA(); }
+  public override Product GetProductB() { return new CompanyB_ProductB(); }
+  public override Product GetProductC() { return new CompanyB_ProductC(); }
+}
+```

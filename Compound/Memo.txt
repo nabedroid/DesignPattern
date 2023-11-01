@@ -1,0 +1,8 @@
+﻿# 定義
+デザインパターンを組み合わせたもので特に定義はない。
+
+# 有名どころ
+MVC モデルが代表的な例。
+View Command 間の Strategy
+Model View 間の Observer
+View の Composite など

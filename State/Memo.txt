@@ -1,0 +1,76 @@
+﻿# 定義
+オブジェクトの内部状態が変化した際にオブジェクトが振る舞いを変更できます。
+オブジェクトはそのクラスを変更したように見えます。
+
+# 解釈
+各状態ごとの各ふるまいを全てクラス化することによって、状態ごとの条件分岐を取り除き拡張性を高くする。
+状態ごとに使う振る舞いを内部的に変更しているという点では、広義の Strategy パターンともいえる。
+
+
+```C#
+public class Context {
+  public MethodA() {
+    if (state == A) { state = B; }
+    else if (state == B) { }
+    else if (state == C) { }
+  }
+  
+  public MethodB() {
+    if (state == A) { }
+    else if (state == B) { state = C; }
+    else if (state == C) { }
+  }
+  
+  public MethodC() {
+    if (state == A) { }
+    else if (state == B) { }
+    else if (state == C) { state = A; }
+  }
+}
+```
+
+これを
+
+```C#
+interface State {
+  void MethodA();
+  void MethodB();
+  void MethodC();
+}
+
+public class StateA() : State {
+  private Context context;
+
+  public StateA(Context context) { this.context = context; }
+
+  public void MethodA() { this.context.State = this.context.GetStateB(); }
+  public void MethodB() { }
+  public void MethodC() { }
+}
+
+public class StateB() : State {
+  public void MethodA() { }
+  public void MethodB() { this.context.State = this.context.GetStateC(); }
+  public void MethodC() { }
+}
+
+public class StateC() : State {
+  public void MethodA() { }
+  public void MethodB() { }
+  public void MethodC() { this.context.State = this.context.GetStateA(); }
+}
+
+public class Context {
+  private State current;
+  private State stateA = new StateA(this);
+  private State stateB = new StateB(this);
+  private State stateC = new StateC(this);
+
+  public State StateA { get; }
+  public State StateB { get; }
+  public State StateC { get; }
+}
+```
+
+とかにして、条件分岐をなくすことが出来る。
+ただし、分かりやすくなるけど、必要なクラスが爆発的に増えるデメリットがある。

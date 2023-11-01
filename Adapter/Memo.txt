@@ -1,0 +1,62 @@
+﻿# 定義
+クラスのインターフェースをクラインとが要求する別のインタフェースに変換する。
+アダプタは、インタフェースの互換性がないためにそのままでは連携できないクラスを連携する。
+
+
+# 用語
+- クライアント：利用者
+- ターゲット：最終的に使いたい型のインタフェース
+- アダプタ：アダプティをラップ（コンポジション）してターゲット（のインタフェース）の如く振る舞う
+- アダプティ：ラップしたいインタフェース
+
+# 例
+
+```C#
+  public interface IPlus {
+    int Plus(int x, int y);
+  }
+
+  public class CalcPlus : IPlus {
+    public int Plus(int x, int y) {
+      return x + y;
+    }
+  }
+
+  public interface IMultiple {
+    int Multiple(int x, int y);
+  }
+
+  public class CalcMultiple : IMultiple {
+    public int Multiple(int x, int y) {
+      return x * y;
+    }
+  }
+
+  public class CalcPlusAdapter : IMultiple {
+    private CalcPlus _plus;
+
+    public CalcPlusAdapter(CalcPlus plus) {
+      this._plus = plus;
+    }
+
+    public int Multiple(int x, int y) {
+      int sum = 0;
+      for (int i = 0; i < y; i++) {
+        sum = this._plus.Plus(sum, x);
+      }
+      return sum;
+    }
+  }
+
+  public class Program {
+    public static void Main() {
+      IPlus plus = new CalcPlus();
+      IMultiple multi = new CalcMultiple();
+      IMultiple adapter = new CalcPlusAdapter(plus);
+
+      System.Console.WriteLine(plus(3, 3));
+      System.Console.WriteLine(multi(3, 3));
+      System.Console.WriteLine(adapter(3, 3));
+    }
+  }
+```

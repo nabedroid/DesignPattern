@@ -1,0 +1,61 @@
+﻿# 基本
+サブジェクトはデータを管理し、データが更新されるとオブザーバに通知する。
+新聞の定期購読で表現すると、発行者＝サブジェクト、購読者＝オブザーバ。
+
+- サブジェクト：発行者（パブリッシャ）
+- オブザーバ：購読者（サブスクライバ）
+
+サブジェクトとオブザーバは基本的に1対多である。
+1つのサブジェクトが多数のオブザーバにデータ更新を通知する。
+
+サブジェクトとオブザーバはインターフェースを通じて実装をする。
+
+```C#
+public interface ISubject {
+  void registerObserver(IObserver);
+  void removeObserver(IObserver);
+  void notifyObservers();
+}
+
+public class Subject : ISubject {
+  public void registerObserver(IObserver iObserver) {}
+  public void removeObserver(IObserver iObserver) {}
+  public void notifyObservers() {}
+}
+
+public interface IObserver {
+  void update();
+}
+
+public class Observer : IObserver {
+  public void update() {}
+}
+
+
+# 目的
+オブジェクト間を疎結合とすることで、柔軟性を持たせる。
+
+# データのプル、プッシュ
+オブザーバがデータを取得するには2パターンの方法が考えられる。
+
+- プル：サブジェクトにデータを取りに行く
+- プッシュ：サブジェクトからデータを送ってもらう
+
+上記の例であれば IObserver がいかにように変化する
+
+public class PullObserver {
+  void update() {
+    // サブジェクトから取得する
+    this.data = subject.Data;
+  }
+}
+
+public class PushObserver {
+  void update(Data data) {
+    // サブジェクトから送ってもらう
+    this.data = data;
+  }
+}
+
+基本的にはプル型の方が有用とされている。
+

@@ -1,0 +1,28 @@
+﻿# 定義
+メソッド内でアルゴリズムの骨組みを定義し、一部の手順をサブクラスに委ねる。
+アルゴリズムの構造を変えることなく、アルゴリズムのある手順をサブクラスに定義させる。
+
+# 解釈
+メソッドを順番に呼び出していく手順＝アルゴリズムを抽象化し管理させる。
+サブクラスは呼び出すメソッドだけ定義する。
+さらにアルゴリズム全体の前後や、メソッド呼び出し前後にフックメソッドを用意することにより、
+フックのタイミングで、サブクラスで任意の任意の処理を実装させることもできる。
+
+```C#
+public abstract class AbstractClass {
+  public void template() {
+    startHook(); // フック
+    methodA();
+    middleHook(); // フック
+    methodB();
+    endHook(); // フック
+  }
+
+  public virtual void startHook() {} // フックは何もしない形で実装しておく
+  abstract void methodA();
+  public virtual void middleHook() {}
+  abstract void methodB();
+  public virtual void endHook() {}
+
+}
+```
